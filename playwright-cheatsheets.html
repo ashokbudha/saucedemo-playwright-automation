@@ -1,0 +1,1221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playwright Automation Cheatsheet</title>
+<style>
+:root {
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --panel-border: #334155;
+  --text: #9ca8b8;
+  --muted: #8290a4;
+  --accent: #10b981;
+  --code-bg: transparent;
+  --code-border: transparent;
+  --keyword: #2bb687;
+  --string: #8eb82f;
+  --number: #d99d2b;
+  --comment: #5f6d80;
+  --func: #528bd0;
+  --variable: #d26b7e;
+  --operator: #1aa5b8;
+  --tag: #d0aa2a;
+  --prop: #d26b7e;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+html, body { max-width: 100%; overflow-x: hidden; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+a { color: var(--accent); text-decoration: none; }
+
+.main {
+  width: min(100%, 1500px);
+  margin: 0 auto;
+  padding: 38px clamp(18px, 3vw, 48px) 70px;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 46px;
+}
+.kicker {
+  color: var(--accent);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+h1 {
+  font-size: clamp(28px, 3.5vw, 42px);
+  color: #fff;
+  margin-bottom: 10px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.hero p {
+  color: var(--muted);
+  max-width: 820px;
+  margin: 0 auto 16px;
+  font-size: 14px;
+}
+.badges { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
+.badge {
+  background: rgba(6,155,121,.12);
+  border: 1px solid rgba(6,155,121,.3);
+  border-radius: 999px;
+  padding: 3px 10px;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Section */
+.section {
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 44px;
+}
+.section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #c4cedb;
+  margin-bottom: 14px;
+  padding-left: 2px;
+}
+.section h2 span { color: var(--accent); margin-right: 8px; }
+
+/* Grid */
+.grid {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* Card */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  overflow: hidden;
+  min-width: 0;
+  display: flex;
+  box-shadow: 0 10px 24px rgba(3, 9, 22, .12);
+}
+.card-body {
+  width: 100%;
+  min-width: 0;
+  padding: 0 22px 28px;
+}
+
+.card-title {
+  display: block;
+  width: fit-content;
+  max-width: 90%;
+  margin: 0 -22px 24px auto;
+  background: var(--accent);
+  color: #e4e8ee;
+  border-radius: 0 12px 0 12px;
+  padding: 7px 17px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+pre {
+  background: var(--code-bg);
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.72;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 15px;
+  white-space: inherit;
+  overflow-wrap: inherit;
+  word-break: inherit;
+}
+p code, li code {
+  background: var(--code-bg);
+  padding: 1px 4px;
+  border-radius: 3px;
+  color: var(--accent);
+  font-size: 11.5px;
+}
+
+.kw { color: var(--keyword); }
+.str { color: var(--string); }
+.num { color: var(--number); }
+.cmt { color: var(--comment); font-style: italic; }
+.fn { color: var(--func); }
+.vr { color: var(--variable); }
+.op { color: var(--operator); }
+.tg { color: var(--tag); }
+.pr { color: var(--prop); }
+
+.card p, .card li { color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+.card ul, .card ol { padding-left: 18px; }
+.card li { margin: 3px 0; }
+.card p { margin: 5px 0; }
+.card b { color: var(--text); }
+
+.footer {
+  margin-top: 40px;
+  border-top: 1px solid var(--panel-border);
+  padding-top: 16px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width:1100px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width:680px) {
+  .grid { grid-template-columns: 1fr; }
+  .main { padding: 20px 12px 50px; }
+  .section h2 { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+<main id="cheatsheet" class="main">
+
+
+  QA Automation • JavaScript / TypeScript
+  Playwright Automation Cheatsheet
+  A practical, job-ready reference for the Playwright Test runner covering commands, patterns and framework topics used in real automation projects.
+  
+    LocatorsActionsAssertions
+    FixturesPOMAPI
+    AuthNetworkCI/CD
+  
+
+
+
+
+  # Getting Started
+  
+    
+      Install & Create
+      npm init playwright@latest
+npm i -D @playwright/test
+npx playwright install
+      Run: npx playwright test · npx playwright test --ui · npx playwright show-report
+    
+
+    
+      Minimal Test
+      import { test, expect } from '@playwright/test';
+
+test('login works', async ({ page }) => {
+  await page.goto('https://example.com/login');
+  await page.getByLabel('Email').fill('user@example.com');
+  await page.getByLabel('Password').fill('secret');
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await expect(page).toHaveURL(/dashboard/);
+});
+    
+
+    
+      Project Structure
+      playwright.config.ts
+tests/
+  login.spec.ts
+  checkout.spec.ts
+pages/
+  LoginPage.ts
+fixtures/
+  test.ts
+playwright/
+  .auth/
+test-data/
+utils/
+  api.ts
+  data.ts
+    
+  
+
+
+
+
+  # Test Structure
+  
+    
+      describe / hooks
+      test.describe('Checkout', () => {
+  test.beforeAll(async () => {});
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/cart');
+  });
+  test.afterEach(async () => {});
+  test.afterAll(async () => {});
+
+  test('places order', async ({ page }) => {});
+});
+    
+
+    
+      Test Info
+      test('debug info', async ({ page }, testInfo) => {
+  console.log(testInfo.title);
+  console.log(testInfo.project.name);
+  console.log(testInfo.retry);
+  console.log(testInfo.outputDir);
+});
+    
+
+    
+      Annotations & Tags
+      test.skip('not applicable', async () => {});
+test.fixme('broken test', async () => {});
+test.fail('known bug', async () => {});
+test.slow('slow flow', async () => {});
+
+test('checkout @smoke @critical', async ({ page }) => {});
+      Filter: npx playwright test --grep @smoke · --grep-invert @slow
+    
+  
+
+
+
+
+  # Locators
+  
+    
+      Recommended Priority
+      page.getByRole('button', { name: 'Submit' })
+page.getByLabel('Email')
+page.getByPlaceholder('Search')
+page.getByText('Welcome')
+page.getByAltText('Logo')
+page.getByTitle('Settings')
+page.getByTestId('submit')
+      Prefer user-facing locators over brittle CSS/XPath.
+    
+
+    
+      Role Locator
+      page.getByRole('button', { name: 'Save' })
+page.getByRole('textbox', { name: 'Email' })
+page.getByRole('link', { name: 'Home' })
+page.getByRole('checkbox', { name: 'Remember me' })
+page.getByRole('heading', { name: 'Dashboard' })
+page.getByRole('row', { name: /John/ })
+    
+
+    
+      Filtering & Chaining
+      page.getByRole('listitem')
+  .filter({ hasText: 'Product 2' })
+  .getByRole('button', { name: 'Add to cart' });
+
+page.locator('article').filter({
+  has: page.getByRole('heading', { name: 'Laptop' })
+});
+    
+
+    
+      Locator Operators
+      locator.first()
+locator.last()
+locator.nth(2)
+locator.filter({ hasText: '...' })
+locator.filter({ has: childLocator })
+locator.or(otherLocator)
+locator.and(otherLocator)
+    
+
+    
+      CSS / XPath (fallback)
+      page.locator('#email')
+page.locator('[data-testid="login"]')
+page.locator('button.primary')
+page.locator('xpath=//button[@type="submit"]')
+    
+
+    
+      Locator Inspection
+      await expect(locator).toBeVisible();
+await expect(locator).toHaveCount(3);
+console.log(await locator.count());
+console.log(await locator.allTextContents());
+console.log(await locator.getAttribute('href'));
+    
+  
+
+
+
+
+  # Actions
+  
+    
+      Click
+      await page.getByRole('button', { name: 'Save' }).click();
+await locator.dblclick();
+await locator.click({ button: 'right' });
+await locator.click({ modifiers: ['Control'] });
+    
+
+    
+      Fill / Input
+      await page.getByLabel('Email').fill('a@b.com');
+await page.getByLabel('Search').press('Enter');
+await page.getByLabel('Code').pressSequentially('ABC123');
+    
+
+    
+      Checkbox / Radio
+      await page.getByRole('checkbox', { name: 'Accept' }).check();
+await page.getByRole('checkbox', { name: 'Accept' }).uncheck();
+await page.getByRole('radio', { name: 'Monthly' }).check();
+    
+
+    
+      Select Dropdown
+      await page.getByLabel('Country').selectOption('NP');
+await page.getByLabel('Country').selectOption({ label: 'Nepal' });
+await expect(page.getByLabel('Country')).toHaveValue('NP');
+    
+
+    
+      Hover / Focus
+      await page.getByText('Products').hover();
+await page.getByLabel('Email').focus();
+await page.getByLabel('Email').blur();
+    
+
+    
+      Keyboard / Mouse
+      await page.keyboard.press('Control+A');
+await page.keyboard.press('Backspace');
+await page.keyboard.type('Hello');
+await page.mouse.click(100, 200);
+await page.mouse.move(300, 200);
+    
+  
+
+
+
+
+  # Assertions
+  
+    
+      Most-Used
+      await expect(locator).toBeVisible();
+await expect(locator).toBeHidden();
+await expect(locator).toBeEnabled();
+await expect(locator).toBeDisabled();
+await expect(locator).toBeChecked();
+await expect(locator).toHaveText('Hello');
+await expect(locator).toContainText('Hello');
+await expect(locator).toHaveValue('John');
+await expect(locator).toHaveAttribute('href', /docs/);
+await expect(locator).toHaveCount(5);
+    
+
+    
+      Page Assertions
+      await expect(page).toHaveTitle(/Dashboard/);
+await expect(page).toHaveURL(/dashboard/);
+await expect(page).toHaveScreenshot('dash.png');
+    
+
+    
+      Soft & Negation
+      await expect.soft(loc).toBeVisible();
+// test continues; failures reported at end
+
+await expect(locator).not.toBeVisible();
+await expect(locator).toHaveText(/welcome\s+john/i);
+    
+  
+
+
+
+
+  # Waiting & Timeouts
+  
+    
+      Auto-Waiting
+      Locators auto-wait for actionability. Assertions auto-retry until pass or timeout. Prefer this over fixed sleeps.
+      // Prefer
+await expect(page.getByText('Saved')).toBeVisible();
+// Avoid
+await page.waitForTimeout(3000);
+    
+
+    
+      Explicit Waits
+      await page.waitForURL(/dashboard/);
+await page.waitForLoadState('domcontentloaded');
+await page.waitForLoadState('networkidle');
+await page.waitForResponse(/api\/orders/);
+    
+
+    
+      Timeouts
+      await expect(loc).toBeVisible({ timeout: 10000 });
+await locator.click({ timeout: 10000 });
+test.setTimeout(60000);
+    
+  
+
+
+
+
+  # Page & Navigation
+  
+    
+      Navigation
+      await page.goto('/');
+await page.reload();
+await page.goBack();
+await page.goForward();
+await page.waitForURL('**/dashboard');
+    
+
+    
+      URL / Title
+      console.log(page.url());
+console.log(await page.title());
+await expect(page).toHaveURL(/products/);
+await expect(page).toHaveTitle(/Shop/);
+    
+
+    
+      Page Content
+      const text = await page.locator('body').innerText();
+const html = await page.locator('body').innerHTML();
+const val = await page.getByLabel('Email').inputValue();
+    
+  
+
+
+
+
+  # Tabs, Frames & Dialogs
+  
+    
+      New Tab / Popup
+      const pagePromise = context.waitForEvent('page');
+await page.getByRole('link', { name: 'Report' }).click();
+const newPage = await pagePromise;
+await newPage.waitForLoadState();
+    
+
+    
+      Iframe
+      const frame = page.frameLocator('#payment-frame');
+await frame.getByLabel('Card number').fill('4111111111111111');
+await frame.getByRole('button', { name: 'Pay' }).click();
+    
+
+    
+      Dialog
+      page.on('dialog', async dialog => {
+  console.log(dialog.type(), dialog.message());
+  await dialog.accept();
+});
+// Prompt with value:
+await dialog.accept('my value');
+    
+  
+
+
+
+
+  # Uploads & Downloads
+  
+    
+      Upload
+      await page.getByLabel('Upload').setInputFiles('files/report.pdf');
+await page.getByLabel('Upload').setInputFiles([
+  'files/a.png', 'files/b.png'
+]);
+    
+
+    
+      Download
+      const dlPromise = page.waitForEvent('download');
+await page.getByRole('button', { name: 'Download' }).click();
+const dl = await dlPromise;
+await dl.saveAs('artifacts/report.pdf');
+    
+  
+
+
+
+
+  # Screenshots, Video & Trace
+  
+    
+      Screenshot
+      await page.screenshot({ path: 'home.png', fullPage: true });
+await locator.screenshot({ path: 'btn.png' });
+await expect(page).toHaveScreenshot('home.png');
+    
+
+    
+      Trace
+      use: { trace: 'on-first-retry' }
+
+await context.tracing.start({ screenshots: true });
+await context.tracing.stop({ path: 'trace.zip' });
+npx playwright show-trace trace.zip
+    
+
+    
+      Video
+      use: {
+  video: 'retain-on-failure',
+  screenshot: 'only-on-failure',
+}
+    
+  
+
+
+
+
+  # Network & API
+  
+    
+      Wait for Response
+      const resp = page.waitForResponse(
+  r => r.url().includes('/api/orders')
+);
+await page.getByRole('button', { name: 'Order' }).click();
+expect((await resp).ok()).toBeTruthy();
+    
+
+    
+      Mock Route
+      await page.route('**/api/products', async route => {
+  await route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ products: [] })
+  });
+});
+    
+
+    
+      API Test
+      test('create user', async ({ request }) => {
+  const res = await request.post('/users', {
+    data: { name: 'Ashok' }
+  });
+  expect(res.ok()).toBeTruthy();
+  const body = await res.json();
+  expect(body.name).toBe('Ashok');
+});
+    
+  
+
+
+
+
+  # Authentication
+  
+    
+      Save & Reuse State
+      await page.context().storageState({
+  path: 'playwright/.auth/user.json'
+});
+
+// playwright.config.ts
+use: { storageState: 'playwright/.auth/user.json' }
+    
+
+    
+      Auth Setup Project
+      import { test as setup } from '@playwright/test';
+
+setup('authenticate', async ({ page }) => {
+  await page.goto('/login');
+  await page.getByLabel('Email').fill(process.env.USER!);
+  await page.getByLabel('Password').fill(process.env.PASS!);
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.context().storageState({
+    path: 'playwright/.auth/user.json'
+  });
+});
+    
+
+    
+      Multiple Roles
+      const admin = await browser.newContext({
+  storageState: 'playwright/.auth/admin.json'
+});
+const user = await browser.newContext({
+  storageState: 'playwright/.auth/user.json'
+});
+const adminPage = await admin.newPage();
+const userPage = await user.newPage();
+    
+  
+
+
+
+
+  # Fixtures
+  
+    
+      Built-in
+      test('example', async ({
+  page, context, browser,
+  browserName, request, baseURL
+}) => {});
+    
+
+    
+      Custom Fixture
+      import { test as base } from '@playwright/test';
+
+type Fixtures = { loggedInPage: Page };
+
+export const test = base.extend<Fixtures>({
+  loggedInPage: async ({ page }, use) => {
+    await page.goto('/login');
+    // login steps...
+    await use(page);
+  }
+});
+    
+
+    
+      Scope
+      Test-scoped: fresh per test.Worker-scoped: once per worker. Use for expensive setup shared across tests in one worker.
+    
+  
+
+
+
+
+  # Page Object Model
+  
+    
+      Page Object
+      export class LoginPage {
+  readonly page: Page;
+  readonly email: Locator;
+  readonly password: Locator;
+  readonly signIn: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.email = page.getByLabel('Email');
+    this.password = page.getByLabel('Password');
+    this.signIn = page.getByRole('button', { name: 'Sign in' });
+  }
+
+  async login(email: string, pass: string) {
+    await this.email.fill(email);
+    await this.password.fill(pass);
+    await this.signIn.click();
+  }
+}
+    
+
+    
+      Usage
+      test('login', async ({ page }) => {
+  const login = new LoginPage(page);
+  await login.login('user@test.com', 'secret');
+  await expect(page).toHaveURL(/dashboard/);
+});
+      Keep page objects focused on behavior; keep assertions in tests.
+    
+  
+
+
+
+
+  # Configuration
+  
+    
+      Practical Config
+      import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests',
+  timeout: 30_000,
+  expect: { timeout: 5_000 },
+  fullyParallel: true,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 2 : undefined,
+  reporter: [['html', { open: 'never' }]],
+  use: {
+    baseURL: 'http://localhost:3000',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+  },
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+  ],
+});
+    
+
+    
+      Common Options
+      use: {
+  viewport: { width: 1280, height: 720 },
+  locale: 'en-US',
+  timezoneId: 'Asia/Kathmandu',
+  colorScheme: 'dark',
+  geolocation: { latitude: 27.71, longitude: 85.32 },
+  permissions: ['geolocation'],
+  ignoreHTTPSErrors: true,
+  extraHTTPHeaders: { 'x-test': '1' }
+}
+    
+
+    
+      Project Dependencies
+      projects: [
+  { name: 'setup', testMatch: /.*\.setup\.ts/ },
+  {
+    name: 'chromium',
+    use: { ...devices['Desktop Chrome'] },
+    dependencies: ['setup']
+  }
+]
+    
+  
+
+
+
+
+  # Parallelism, Retries & Sharding
+  
+    
+      Workers
+      npx playwright test --workers=4
+npx playwright test --workers=1
+
+workers: process.env.CI ? 2 : undefined,
+fullyParallel: true
+    
+
+    
+      Retries
+      retries: process.env.CI ? 2 : 0;
+
+test('x', async ({}, testInfo) => {
+  console.log(testInfo.retry);
+});
+    
+
+    
+      Sharding
+      npx playwright test --shard=1/4
+npx playwright test --shard=2/4
+npx playwright test --shard=3/4
+npx playwright test --shard=4/4
+    
+  
+
+
+
+
+  # Test Data & Environment
+  
+    
+      Env Variables
+      // .env or CI secrets
+BASE_URL=https://staging.example.com
+USER_EMAIL=test@example.com
+
+const email = process.env.USER_EMAIL!;
+    
+
+    
+      Parameterized
+      const users = [
+  { role: 'admin', email: 'admin@test.com' },
+  { role: 'user', email: 'user@test.com' },
+];
+for (const u of users) {
+  test(`login as ${u.role}`, async ({ page }) => {
+    await page.getByLabel('Email').fill(u.email);
+  });
+}
+    
+
+    
+      Unique Data
+      const id = `pw-${Date.now()}`;
+const email = `test+${id}@example.com`;
+
+// Unique data per test when tests mutate state
+    
+  
+
+
+
+
+  # Debugging & Codegen
+  
+    
+      Codegen
+      npx playwright codegen https://example.com
+      Discover actions and locators, then clean up generated code.
+    
+
+    
+      Debug Mode
+      npx playwright test --debug
+npx playwright test --headed
+npx playwright test --ui
+
+await page.pause();
+PWDEBUG=1 npx playwright test
+    
+
+    
+      Quick Inspect
+      console.log(await locator.innerText());
+await page.screenshot({ path: 'debug.png', fullPage: true });
+    
+  
+
+
+
+
+  # Reports & CI
+  
+    
+      Reporters
+      npx playwright show-report
+npx playwright test --reporter=list
+npx playwright test --reporter=html
+    
+
+    
+      CI Essentials
+      npx playwright install --with-deps
+npx playwright test --workers=2
+npx playwright show-report
+      Collect trace/screenshot/video on failures. Avoid shared mutable state.
+    
+
+    
+      Artifacts
+      test-results/
+playwright-report/
+playwright/.auth/
+  # keep out of source control
+    
+  
+
+
+
+
+  # Common Patterns
+  
+    
+      Login Once, Test Many
+      use: { storageState: 'playwright/.auth/user.json' }
+
+test('dashboard', async ({ page }) => {
+  await page.goto('/dashboard');
+});
+    
+
+    
+      Wait + Act Atomically
+      const resp = page.waitForResponse(/\/api\/save/);
+await page.getByRole('button', { name: 'Save' }).click();
+expect((await resp).ok()).toBeTruthy();
+    
+
+    
+      Dynamic Lists
+      const items = page.getByRole('listitem');
+await expect(items).toHaveCount(3);
+await items.filter({ hasText: 'Laptop' })
+  .getByRole('button', { name: 'Add to cart' })
+  .click();
+    
+  
+
+
+
+
+  # Anti-Patterns vs Best Practices
+  
+    
+      Avoid
+      // arbitrary sleeps
+await page.waitForTimeout(5000);
+
+// brittle DOM chains
+page.locator('div:nth-child(2) > div > button');
+
+// test order dependency
+test('A creates data', ...);
+test('B assumes A ran', ...);
+
+// hard-coded secrets
+const password = 'RealPassword123';
+    
+
+    
+      Prefer
+      // user-facing locator
+page.getByRole('button', { name: 'Submit' });
+
+// assertion waits
+await expect(page.getByText('Saved')).toBeVisible();
+
+// isolated test data
+const email = `test-${Date.now()}@example.com`;
+
+// env secret
+const password = process.env.TEST_PASSWORD!;
+    
+  
+
+
+
+
+  # JavaScript / TypeScript Essentials
+  
+    
+      Async / Await
+      const res = await page.request.get('/api/users');
+const data = await res.json();
+
+await page.getByLabel('Email').fill(email);
+await expect(page.getByRole('heading')).toBeVisible();
+    
+
+    
+      Arrays & Destructuring
+      for (const p of products) {
+  await page.getByText(p.name).click();
+}
+const names = await page.getByRole('listitem').allTextContents();
+
+const { name, role } = user;
+test('x', async ({ page, request }) => {});
+    
+
+    
+      TypeScript Basics
+      type User = {
+  email: string;
+  role: 'admin' | 'user';
+};
+
+function makeUser(role: User['role']): User {
+  return { email: `${role}@test.com`, role };
+}
+    
+  
+
+
+
+
+  # CLI Quick Reference
+  
+    
+      Commands
+      npx playwright test
+npx playwright test --ui
+npx playwright test --debug
+npx playwright test --headed
+npx playwright test --project=chromium
+npx playwright test -g "login"
+npx playwright test tests/login.spec.ts
+npx playwright test --grep @smoke
+npx playwright test --workers=1
+npx playwright test --shard=1/4
+npx playwright show-report
+npx playwright codegen https://example.com
+npx playwright show-trace trace.zip
+    
+
+    
+      Env Flags
+      PWDEBUG=1 npx playwright test
+DEBUG=pw:api npx playwright test
+CI=1 npx playwright test
+    
+  
+
+
+
+
+  # Daily Checklist
+  
+    
+      Before Writing
+      
+        Define user-visible behavior to verify
+        Pick stable locator: role, label, text, test-id
+        Decide test data and isolation strategy
+        Consider API setup for speed
+      
+    
+
+    
+      While Writing
+      
+        Use locators + auto-waiting
+        Assert outcomes, not implementation
+        Avoid arbitrary sleeps
+        Keep tests independent and parallel-safe
+        Extract repeated behavior into POMs/fixtures
+      
+    
+
+    
+      When a Test Fails
+      
+        Run with --debug or UI mode
+        Inspect locator uniqueness and DOM
+        Check trace / screenshot / video
+        Check network/API if UI depends on backend
+        Fix root cause, not just increase timeouts
+      
+    
+  
+
+
+
+
+  # Learning Roadmap
+  
+    
+      Job-Ready Order
+      
+        Test syntax + fixtures
+        Locators + actions
+        Assertions + auto-waiting
+        Navigation + forms + tabs + frames
+        Screenshots + trace + debugging
+        API testing + network mocking
+        Authentication + storage state
+        Page Object Model
+        Config + projects + browsers
+        Parallelism + retries + sharding
+        Reports + CI/CD
+        Custom fixtures + framework design
+        Real E2E project suite
+      
+    
+  
+
+
+
+  Playwright Automation Cheatsheet — Practical reference for locators, actions, assertions, fixtures, POM, API, auth, network and CI/CD.
+   ·  Official docs: playwright.dev/docs
+
+
+</main>
+<script>
+  (() => {
+    const root = document.getElementById('cheatsheet');
+    const source = root.textContent.replace(/\r/g, '').trim();
+    const sections = source.split(/(?=^[ \t]*# (?!keep out)[^\r\n]+)/m);
+    const heroLines = sections.shift().split('\n').map(line => line.trim()).filter(Boolean);
+
+    root.textContent = '';
+
+    const hero = document.createElement('header');
+    hero.className = 'hero';
+    hero.innerHTML = `
+      <div class="kicker">${heroLines[0] || 'QA Automation'}</div>
+      <h1>${heroLines[1] || 'Playwright Automation Cheatsheet'}</h1>
+      <p>${heroLines[2] || 'A practical reference for the Playwright Test runner.'}</p>
+      <div class="badges" aria-label="Topics covered">
+        ${['Locators', 'Actions', 'Assertions', 'Fixtures', 'POM', 'API', 'Auth', 'CI/CD']
+          .map(topic => `<span class="badge">${topic}</span>`).join('')}
+      </div>`;
+    root.appendChild(hero);
+
+    for (const sectionSource of sections) {
+      const lines = sectionSource.split('\n');
+      const title = lines.shift().replace(/^[ \t]*#\s*/, '').trim();
+      if (!title) continue;
+      const groups = lines.join('\n').split(/\n\s*\n\s*\n+/).map(group => group.trim()).filter(Boolean);
+      const section = document.createElement('section');
+      section.className = 'section';
+      section.innerHTML = `<h2><span>#</span>${title}</h2>`;
+
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+      for (const group of groups) {
+        const cardLines = group.split('\n').map(line => line.trim()).filter(Boolean);
+        const card = document.createElement('article');
+        card.className = 'card';
+        const title = cardLines.shift().trim();
+        const body = cardLines.join('\n').trim();
+        card.innerHTML = `
+          <div class="card-body">
+            <div class="card-title">${title}</div>
+            ${body ? `<pre><code>${highlightCode(body)}</code></pre>` : ''}
+          </div>`;
+        grid.appendChild(card);
+      }
+      section.appendChild(grid);
+      root.appendChild(section);
+    }
+
+    const footer = document.createElement('footer');
+    footer.className = 'footer';
+    footer.textContent = 'Playwright Automation Cheatsheet - practical reference for locators, actions, assertions, fixtures, POM, API, auth, network and CI/CD.';
+    root.appendChild(footer);
+
+    function escapeHtml(value) {
+      return value.replace(/[&<>"']/g, character => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[character]));
+    }
+
+    function highlightCode(value) {
+      const tokens = [];
+      const protectedCode = value.replace(/(\/\/[^\n]*|\/\*[\s\S]*?\*\/|'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*"|`(?:\\.|[^`\\])*`)/g, token => {
+        const className = token.startsWith('//') || token.startsWith('/*') ? 'cmt' : 'str';
+        tokens.push(`<span class="${className}">${escapeHtml(token)}</span>`);
+        return `__TOKEN_${tokens.length - 1}__`;
+      });
+
+      let highlighted = escapeHtml(protectedCode)
+        .replace(/\b(const|let|var|function|return|async|await|import|from|export|new|type|interface|class|for|of|if|else|switch|case|default|true|false|null|undefined)\b/g, '<span class="kw">$1</span>')
+        .replace(/\b\d+(?:\.\d+)?\b/g, '<span class="num">$&</span>');
+
+      return highlighted.replace(/__TOKEN_(\d+)__/g, (_, index) => tokens[index]);
+    }
+  })();
+</script>
+</body>
+</html>
