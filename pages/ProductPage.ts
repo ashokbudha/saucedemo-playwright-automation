@@ -12,7 +12,6 @@ export class ProductPage{
   readonly removeFromCartBtn : Locator;
   readonly shoppinCartBadge : Locator;
   readonly shoppingCartBtn : Locator;
-  readonly cartItem : Locator;
   readonly selectDropdown : Locator;
 
 
@@ -28,7 +27,7 @@ export class ProductPage{
     this.removeFromCartBtn = page.getByRole("button", {name:"Remove"})
     this.shoppinCartBadge = page.locator("[data-test='shopping-cart-badge']")
     this.shoppingCartBtn = page.locator("[data-test='shopping-cart-link']")
-    this.cartItem = page.locator("[data-test='cart-list']").locator("[data-test='inventory-item']")
+
     this.selectDropdown = page.locator("select");
     
 

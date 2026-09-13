@@ -34,7 +34,7 @@ test("TC_PRODUCT_002 — Verify all products are displayed", async ({
 // TC_PRODUCT_003 — Add one product to cart
 test(" TC_PRODUCT_003 — Add one product to cart", async ({
   page,
-  productPage,
+  productPage,cartPage
 }) => {
   await productPage.open();
 
@@ -46,7 +46,7 @@ test(" TC_PRODUCT_003 — Add one product to cart", async ({
   await productPage.openCart();
   await expect(page).toHaveURL("https://www.saucedemo.com/cart.html");
 
-  await expect(productPage.cartItem).toHaveCount(1);
+  await expect(cartPage.cartItem).toHaveCount(1);
   await expect(
     productPage.getProductByName("Sauce Labs Backpack"),
   ).toBeVisible();
@@ -158,7 +158,7 @@ test("TC_PRODUCT_006 — Sort products by price: high to low", async ({
 // TODO: TC_PRODUCT_008 — Sort products by name z-a
 
 // TODO: TC_PRODUCT_009 — Add multiple products
-test.only("TC_PRODUCT_009 — Add multiple products", async({page, productPage})=>{
+test.only("TC_PRODUCT_009 — Add multiple products", async({page, productPage,cartPage})=>{
 // Add Product 1
 //  ├─ Badge = 1
 //  ├─ Cart count = 1
@@ -176,7 +176,7 @@ test.only("TC_PRODUCT_009 — Add multiple products", async({page, productPage})
   await productPage.addProduct("Sauce Labs Backpack")
   await expect(productPage.shoppinCartBadge).toHaveText("1")
   await productPage.openCart();
-  await expect(productPage.cartItem).toHaveCount(1)
+  await expect(cartPage.cartItem).toHaveCount(1)
   await expect(productPage.getProductByName("Sauce Labs Backpack")).toBeVisible();
   //todo in actual we have to click back to shopping button but for now lets try using url
   productPage.open()
@@ -185,7 +185,7 @@ test.only("TC_PRODUCT_009 — Add multiple products", async({page, productPage})
   await productPage.addProduct("Sauce Labs Fleece Jacket")
   await expect(productPage.shoppinCartBadge).toHaveText("2")
   await productPage.openCart()
-  await expect(productPage.cartItem).toHaveCount(2)
+  await expect(cartPage.cartItem).toHaveCount(2)
   await expect(productPage.getProductByName("Sauce Labs Fleece Jacket")).toBeVisible();
   await expect(productPage.getProductByName("Sauce Labs Backpack")).toBeVisible();
 
